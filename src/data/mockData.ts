@@ -1,4 +1,3 @@
-
 import { ItemCardProps, ItemType } from "@/components/ItemCard";
 import { FundraiserCardProps } from "@/components/FundraiserCard";
 
@@ -78,35 +77,37 @@ export const mockFundraisers: FundraiserCardProps[] = [
     id: "1",
     title: "Band Trip to State Competition",
     description: "Help our award-winning band travel to the state competition this spring. Funds will cover transportation, lodging, and meals for 45 students.",
-    goal: 5000,
-    raised: 3250,
+    goalAmount: 5000,
+    amountRaised: 3250,
     image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
     organizer: "Music Department",
-    endDate: new Date(new Date().setDate(new Date().getDate() + 14)) // 14 days from now
+    endDate: new Date(new Date().setDate(new Date().getDate() + 14)), // 14 days from now
+    participants: 42
   },
   {
     id: "2",
     title: "New Science Lab Equipment",
     description: "Our science department needs updated microscopes and lab materials to enhance student learning experiences.",
-    goal: 3500,
-    raised: 1200,
+    goalAmount: 3500,
+    amountRaised: 1200,
     image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901",
     organizer: "Science Department",
-    endDate: new Date(new Date().setDate(new Date().getDate() + 30)) // 30 days from now
+    endDate: new Date(new Date().setDate(new Date().getDate() + 30)), // 30 days from now
+    participants: 18
   },
   {
     id: "3",
     title: "School Library Book Drive",
     description: "Help us add 200 new books to our school library. Your donations will directly fund new literature for students of all ages.",
-    goal: 2000,
-    raised: 1850,
+    goalAmount: 2000,
+    amountRaised: 1850,
     image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
     organizer: "Library Club",
-    endDate: new Date(new Date().setDate(new Date().getDate() + 10)) // 10 days from now
+    endDate: new Date(new Date().setDate(new Date().getDate() + 10)), // 10 days from now
+    participants: 35
   }
 ];
 
-// Mock user data
 export interface User {
   id: string;
   name: string;

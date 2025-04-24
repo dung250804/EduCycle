@@ -28,6 +28,7 @@ interface ActivityFormData {
   dateEnd: string;
   location: string;
   itemTypes: string;
+  target?: string; // Add the target field that was missing
   image?: FileList;
 }
 
@@ -45,6 +46,7 @@ const CreateActivity = () => {
       dateEnd: "",
       location: "",
       itemTypes: "",
+      target: "",
     },
   });
   
@@ -249,8 +251,10 @@ const CreateActivity = () => {
                           accept="image/*"
                           className={imagePreview ? "" : "sr-only"}
                           onChange={(e) => {
-                            onChange(e.target.files);
-                            handleImageChange(e);
+                            if (e.target.files) {
+                              onChange(e.target.files);
+                              handleImageChange(e);
+                            }
                           }}
                           {...fieldProps}
                         />

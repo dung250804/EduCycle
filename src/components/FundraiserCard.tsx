@@ -8,20 +8,21 @@ export interface FundraiserCardProps {
   id: string;
   title: string;
   description: string;
-  goal: number;
-  raised: number;
+  goalAmount: number;  // Changed from goal to goalAmount
+  amountRaised: number; // Changed from raised to amountRaised
   image: string;
   organizer: string;
   endDate: Date;
+  participants: number; // Added participants field
 }
 
-const FundraiserCard = ({ id, title, description, goal, raised, image, organizer, endDate }: FundraiserCardProps) => {
-  const progress = Math.min((raised / goal) * 100, 100);
+const FundraiserCard = ({ id, title, description, goalAmount, amountRaised, image, organizer, endDate }: FundraiserCardProps) => {
+  const progress = Math.min((amountRaised / goalAmount) * 100, 100);
   const daysLeft = Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
 
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-md">
-      <Link to={`/fundraiser/${id}`}>
+      <Link to={`/fundraisers/${id}`}>
         <div className="h-48 overflow-hidden">
           <img 
             src={image} 
@@ -40,12 +41,12 @@ const FundraiserCard = ({ id, title, description, goal, raised, image, organizer
         <p className="line-clamp-2 text-sm text-muted-foreground mb-3">{description}</p>
         <Progress value={progress} className="h-2" />
         <div className="flex justify-between mt-2 text-sm">
-          <span className="font-medium">${raised.toLocaleString()}</span>
-          <span className="text-muted-foreground">of ${goal.toLocaleString()}</span>
+          <span className="font-medium">${amountRaised.toLocaleString()}</span>
+          <span className="text-muted-foreground">of ${goalAmount.toLocaleString()}</span>
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Link to={`/fundraiser/${id}`} className="w-full">
+        <Link to={`/fundraisers/${id}`} className="w-full">
           <Button className="w-full">Support This Cause</Button>
         </Link>
       </CardFooter>

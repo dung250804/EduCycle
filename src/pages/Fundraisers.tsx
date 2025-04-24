@@ -55,7 +55,17 @@ const Fundraisers = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredFundraisers.map((fundraiser) => (
               <Link key={fundraiser.id} to={`/fundraisers/${fundraiser.id}`}>
-                <FundraiserCard {...fundraiser} />
+                <FundraiserCard 
+                  id={fundraiser.id}
+                  title={fundraiser.title}
+                  description={fundraiser.description}
+                  goalAmount={fundraiser.goalAmount} 
+                  amountRaised={fundraiser.amountRaised}
+                  image={fundraiser.image}
+                  organizer={fundraiser.organizer}
+                  endDate={fundraiser.endDate}
+                  participants={fundraiser.participants}
+                />
               </Link>
             ))}
           </div>
