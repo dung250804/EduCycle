@@ -7,7 +7,7 @@ import ItemCard from "@/components/ItemCard";
 import FundraiserCard from "@/components/FundraiserCard";
 import { mockItems, mockFundraisers, categories } from "@/data/mockData";
 import { Link } from "react-router-dom";
-import { Category, Exchange, HandHeart, DollarSign } from "lucide-react";
+import { Folder, ArrowLeftRight, HandHeart, DollarSign } from "lucide-react";
 
 const Index = () => {
   const featuredItems = mockItems.slice(0, 3);
@@ -59,7 +59,7 @@ const Index = () => {
             </div>
             <div className="text-center p-6 bg-white rounded-lg shadow-sm">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-educycle-yellow/10 text-educycle-yellow mb-4">
-                <Exchange className="h-6 w-6" />
+                <ArrowLeftRight className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-medium mb-2">Exchange</h3>
               <p className="text-muted-foreground">
@@ -108,7 +108,7 @@ const Index = () => {
                 className="bg-white p-6 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow"
               >
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary mb-3">
-                  <Category className="h-5 w-5" />
+                  <Folder className="h-5 w-5" />
                 </div>
                 <h3 className="font-medium">{category}</h3>
               </Link>

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Upload, DollarSign, Exchange, HandHeart } from "lucide-react";
+import { Upload, DollarSign, ArrowLeftRight, HandHeart } from "lucide-react";
 import { categories } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
 
@@ -76,7 +76,7 @@ const Sell = () => {
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="exchange" id="exchange" />
                         <Label htmlFor="exchange" className="flex items-center gap-1 cursor-pointer">
-                          <Exchange className="h-4 w-4" /> For Exchange
+                          <ArrowLeftRight className="h-4 w-4" /> For Exchange
                         </Label>
                       </div>
                       <div className="flex items-center space-x-2">

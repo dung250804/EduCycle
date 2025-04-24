@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Category } from "lucide-react";
+import { Folder } from "lucide-react";
 
 export interface CategoryProps {
   categories: string[];
@@ -12,7 +12,7 @@ const CategoryFilter = ({ categories, selectedCategory, onSelectCategory }: Cate
   return (
     <div className="mb-6">
       <h2 className="text-lg font-medium mb-3 flex items-center gap-2">
-        <Category className="h-5 w-5" /> Categories
+        <Folder className="h-5 w-5" /> Categories
       </h2>
       <div className="flex flex-wrap gap-2">
         <Button

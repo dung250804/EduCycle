@@ -2,7 +2,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, Exchange, HandHeart } from "lucide-react";
+import { DollarSign, ArrowLeftRight, HandHeart } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export type ItemType = "sale" | "exchange" | "donation";
@@ -24,7 +24,7 @@ const ItemCard = ({ id, title, description, price, image, category, type, seller
       case "sale":
         return <DollarSign className="h-4 w-4" />;
       case "exchange":
-        return <Exchange className="h-4 w-4" />;
+        return <ArrowLeftRight className="h-4 w-4" />;
       case "donation":
         return <HandHeart className="h-4 w-4" />;
     }

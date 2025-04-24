@@ -8,7 +8,7 @@ import CategoryFilter from "@/components/CategoryFilter";
 import { mockItems, categories } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Exchange, HandHeart, DollarSign } from "lucide-react";
+import { ArrowLeftRight, HandHeart, DollarSign } from "lucide-react";
 
 const Browse = () => {
   const [searchParams] = useSearchParams();
@@ -80,7 +80,7 @@ const Browse = () => {
                     onClick={() => setSelectedType("exchange")}
                     className="justify-start"
                   >
-                    <Exchange className="h-4 w-4 mr-2" /> For Exchange
+                    <ArrowLeftRight className="h-4 w-4 mr-2" /> For Exchange
                   </Button>
                   <Button
                     variant={selectedType === "donation" ? "default" : "outline"}
