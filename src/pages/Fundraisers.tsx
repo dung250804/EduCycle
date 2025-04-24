@@ -6,6 +6,7 @@ import FundraiserCard from "@/components/FundraiserCard";
 import { mockFundraisers } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 
 const Fundraisers = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,13 +46,17 @@ const Fundraisers = () => {
             <h2 className="text-xl font-medium">Have a cause you care about?</h2>
             <p className="text-muted-foreground">Teachers and student clubs can start fundraising campaigns.</p>
           </div>
-          <Button>Start a Fundraiser</Button>
+          <Link to="/create-activity">
+            <Button>Start a Fundraiser</Button>
+          </Link>
         </div>
         
         {filteredFundraisers.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredFundraisers.map((fundraiser) => (
-              <FundraiserCard key={fundraiser.id} {...fundraiser} />
+              <Link key={fundraiser.id} to={`/fundraisers/${fundraiser.id}`}>
+                <FundraiserCard {...fundraiser} />
+              </Link>
             ))}
           </div>
         ) : (
