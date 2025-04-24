@@ -8,12 +8,12 @@ export interface FundraiserCardProps {
   id: string;
   title: string;
   description: string;
-  goalAmount: number;  // Changed from goal to goalAmount
-  amountRaised: number; // Changed from raised to amountRaised
+  goalAmount: number;
+  amountRaised: number;
   image: string;
   organizer: string;
   endDate: Date;
-  participants: number; // Added participants field
+  participants: number;
 }
 
 const FundraiserCard = ({ id, title, description, goalAmount, amountRaised, image, organizer, endDate }: FundraiserCardProps) => {

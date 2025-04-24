@@ -28,7 +28,7 @@ interface ActivityFormData {
   dateEnd: string;
   location: string;
   itemTypes: string;
-  target?: string; // Add the target field that was missing
+  target: string; // Add this field to the interface
   image?: FileList;
 }
 
@@ -310,6 +310,7 @@ const CreateActivity = () => {
                 <FormField
                   control={form.control}
                   name="target"
+                  rules={{ required: "Fundraising target is required" }}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Fundraising Target ($)</FormLabel>

@@ -54,7 +54,7 @@ const Fundraisers = () => {
         {filteredFundraisers.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredFundraisers.map((fundraiser) => (
-              <Link key={fundraiser.id} to={`/fundraisers/${fundraiser.id}`}>
+              <div key={fundraiser.id}>
                 <FundraiserCard 
                   id={fundraiser.id}
                   title={fundraiser.title}
@@ -66,7 +66,7 @@ const Fundraisers = () => {
                   endDate={fundraiser.endDate}
                   participants={fundraiser.participants}
                 />
-              </Link>
+              </div>
             ))}
           </div>
         ) : (
