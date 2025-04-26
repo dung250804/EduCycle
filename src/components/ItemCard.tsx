@@ -2,62 +2,52 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, ArrowLeftRight, HandHeart } from "lucide-react";
+import { ArrowLeftRight, DollarSign } from "lucide-react";
 import { Link } from "react-router-dom";
+import type { Post } from "@/types/user";
 
-export type ItemType = "sale" | "exchange" | "donation";
+export interface ItemCardProps extends Post {}
 
-export interface ItemCardProps {
-  id: string;
-  title: string;
-  description: string;
-  price?: number;
-  image: string;
-  category: string;
-  type: ItemType;
-  seller: string;
-}
-
-const ItemCard = ({ id, title, description, price, image, category, type, seller }: ItemCardProps) => {
+const ItemCard = ({ post_id, title, description, price, type, product_type, status, image }: ItemCardProps) => {
   const getTypeIcon = () => {
     switch (type) {
-      case "sale":
+      case "Liquidation":
         return <DollarSign className="h-4 w-4" />;
-      case "exchange":
+      case "Exchange":
         return <ArrowLeftRight className="h-4 w-4" />;
-      case "donation":
-        return <HandHeart className="h-4 w-4" />;
+      default:
+        return null;
     }
   };
 
   const getTypeColor = () => {
     switch (type) {
-      case "sale":
+      case "Liquidation":
         return "bg-educycle-blue text-white";
-      case "exchange":
+      case "Exchange":
         return "bg-educycle-yellow text-black";
-      case "donation":
-        return "bg-educycle-green text-white";
+      default:
+        return "bg-gray-500 text-white";
     }
   };
 
   const getTypeText = () => {
     switch (type) {
-      case "sale":
+      case "Liquidation":
         return "For Sale";
-      case "exchange":
+      case "Exchange":
         return "For Exchange";
-      case "donation":
-        return "Free Donation";
+      default:
+        return type;
     }
   };
 
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-md">
-      <Link to={`/item/${id}`}>
+      <Link to={`/post/${post_id}`}>
         <div className="relative h-48 overflow-hidden">
           <img 
-            src={image} 
+            src={image || "/placeholder.svg"} 
             alt={title} 
             className="h-full w-full object-cover transition-transform hover:scale-105"
           />
@@ -76,10 +66,10 @@ const ItemCard = ({ id, title, description, price, image, category, type, seller
           <div>
             <CardTitle className="line-clamp-1 text-lg">{title}</CardTitle>
             <CardDescription className="text-xs text-muted-foreground">
-              Posted by {seller} • {category}
+              {product_type} • {status}
             </CardDescription>
           </div>
-          {type === "sale" && price && (
+          {type === "Liquidation" && price && (
             <span className="font-bold text-lg">${price.toFixed(2)}</span>
           )}
         </div>
@@ -88,11 +78,11 @@ const ItemCard = ({ id, title, description, price, image, category, type, seller
         <p className="line-clamp-2 text-sm text-muted-foreground">{description}</p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between">
-        <Link to={`/item/${id}`}>
+        <Link to={`/post/${post_id}`}>
           <Button variant="outline" size="sm">View Details</Button>
         </Link>
-        {type === "sale" && (
-          <Button size="sm">Add to Cart</Button>
+        {type === "Liquidation" && status === "Approved" && (
+          <Button size="sm">Buy Now</Button>
         )}
       </CardFooter>
     </Card>
