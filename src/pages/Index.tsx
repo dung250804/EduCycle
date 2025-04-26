@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -8,13 +7,10 @@ import FundraiserCard from "@/components/FundraiserCard";
 import { mockItems, mockFundraisers, categories } from "@/data/mockData";
 import { Link } from "react-router-dom";
 import { Folder, ArrowLeftRight, HandHeart, DollarSign } from "lucide-react";
-
 const Index = () => {
   const featuredItems = mockItems.slice(0, 3);
   const featuredFundraisers = mockFundraisers.slice(0, 2);
-
-  return (
-    <div className="flex flex-col min-h-screen">
+  return <div className="flex flex-col min-h-screen">
       <Navigation />
       
       {/* Hero Section */}
@@ -34,7 +30,7 @@ const Index = () => {
                 </Button>
               </Link>
               <Link to="/sell">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20">
+                <Button size="lg" variant="outline" className="border-white hover:bg-white/20 text-emerald-700">
                   Sell an Item
                 </Button>
               </Link>
@@ -89,9 +85,7 @@ const Index = () => {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredItems.map((item) => (
-              <ItemCard key={item.id} {...item} />
-            ))}
+            {featuredItems.map(item => <ItemCard key={item.id} {...item} />)}
           </div>
         </div>
       </section>
@@ -101,18 +95,12 @@ const Index = () => {
         <div className="container">
           <h2 className="text-2xl font-bold mb-8">Browse by Category</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {categories.map((category) => (
-              <Link 
-                to={`/browse?category=${category}`} 
-                key={category} 
-                className="bg-white p-6 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow"
-              >
+            {categories.map(category => <Link to={`/browse?category=${category}`} key={category} className="bg-white p-6 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary mb-3">
                   <Folder className="h-5 w-5" />
                 </div>
                 <h3 className="font-medium">{category}</h3>
-              </Link>
-            ))}
+              </Link>)}
           </div>
         </div>
       </section>
@@ -127,9 +115,7 @@ const Index = () => {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {featuredFundraisers.map((fundraiser) => (
-              <FundraiserCard key={fundraiser.id} {...fundraiser} />
-            ))}
+            {featuredFundraisers.map(fundraiser => <FundraiserCard key={fundraiser.id} {...fundraiser} />)}
           </div>
         </div>
       </section>
@@ -157,8 +143,6 @@ const Index = () => {
       </section>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
