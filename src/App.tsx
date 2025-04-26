@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Browse from "./pages/Browse";
 import Fundraisers from "./pages/Fundraisers";
 import Sell from "./pages/Sell";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import AdminUsers from "./pages/AdminUsers";
 import AdminDonations from "./pages/AdminDonations";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/fundraisers/:id" element={<FundraiserDetails />} />
           <Route path="/create-activity" element={<CreateActivity />} />
           <Route path="/sell" element={<Sell />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/donations" element={<AdminDonations />} />
           <Route path="/admin/items" element={<AdminItems />} />

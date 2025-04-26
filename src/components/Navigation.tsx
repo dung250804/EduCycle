@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, User } from "lucide-react";
+import { Search, User, ShoppingBag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
@@ -43,7 +43,10 @@ const Navigation = () => {
             </Button>
           </Link>
           <Link to="/sell">
-            <Button className="bg-primary hover:bg-educycle-green/90">Sell Item</Button>
+            <Button className="bg-primary hover:bg-primary/90 flex items-center gap-2">
+              <ShoppingBag className="h-5 w-5" />
+              Sell Item
+            </Button>
           </Link>
           <Link to="/profile">
             <Button variant="ghost" size="icon">
