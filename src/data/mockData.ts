@@ -1,5 +1,4 @@
-
-import type { Post, ItemType } from "@/types/user";
+import type { Post, ItemType, Fundraiser, FundraiserType } from "@/types/user";
 import { FundraiserCardProps } from "@/components/FundraiserCard";
 
 export const categories = [
@@ -100,7 +99,7 @@ export const mockItems: Post[] = [
   }
 ];
 
-export const mockFundraisers: FundraiserCardProps[] = [
+export const mockFundraisers: Fundraiser[] = [
   {
     id: "1",
     title: "Band Trip to State Competition",
@@ -110,7 +109,32 @@ export const mockFundraisers: FundraiserCardProps[] = [
     image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
     organizer: "Music Department",
     endDate: new Date(new Date().setDate(new Date().getDate() + 14)), // 14 days from now
-    participants: 42
+    participants: 42,
+    fundraiserType: "ItemSale",
+    items: [
+      {
+        post_id: "f1-item1",
+        seller_id: "seller1",
+        title: "Band Concert Ticket",
+        description: "Ticket to the band's fundraising concert on May 15th.",
+        price: 25,
+        type: "Liquidation",
+        product_type: "Event Ticket",
+        status: "Approved",
+        image: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4"
+      },
+      {
+        post_id: "f1-item2",
+        seller_id: "seller1",
+        title: "Band T-Shirt",
+        description: "Support the band with this commemorative t-shirt.",
+        price: 20,
+        type: "Liquidation",
+        product_type: "Apparel",
+        status: "Approved",
+        image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27"
+      }
+    ]
   },
   {
     id: "2",
@@ -121,7 +145,9 @@ export const mockFundraisers: FundraiserCardProps[] = [
     image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901",
     organizer: "Science Department",
     endDate: new Date(new Date().setDate(new Date().getDate() + 30)), // 30 days from now
-    participants: 18
+    participants: 18,
+    fundraiserType: "ItemDonation",
+    items: []
   },
   {
     id: "3",
@@ -132,7 +158,9 @@ export const mockFundraisers: FundraiserCardProps[] = [
     image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
     organizer: "Library Club",
     endDate: new Date(new Date().setDate(new Date().getDate() + 10)), // 10 days from now
-    participants: 35
+    participants: 35,
+    fundraiserType: "ItemDonation",
+    items: []
   }
 ];
 

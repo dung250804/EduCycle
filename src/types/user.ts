@@ -29,3 +29,19 @@ export interface Post {
   category?: string;
   seller?: string;
 }
+
+export type FundraiserType = 'ItemDonation' | 'ItemSale';
+
+export interface Fundraiser {
+  id: string;
+  title: string;
+  description: string;
+  goalAmount: number;
+  amountRaised: number;
+  image: string;
+  organizer: string;
+  endDate: Date;
+  participants: number;
+  fundraiserType: FundraiserType;
+  items?: Post[];
+}
