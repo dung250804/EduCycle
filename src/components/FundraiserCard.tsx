@@ -69,16 +69,20 @@ const FundraiserCard = ({ id, title, description, goalAmount, amountRaised, imag
       </CardHeader>
       <CardContent className="p-4 pt-2">
         <p className="line-clamp-2 text-sm text-muted-foreground mb-3">{description}</p>
-        <Progress value={progress} className="h-2" />
-        <div className="flex justify-between mt-2 text-sm">
-          <span className="font-medium">${amountRaised.toLocaleString()}</span>
-          <span className="text-muted-foreground">of ${goalAmount.toLocaleString()}</span>
-        </div>
+        {fundraiserType === "ItemSale" && (
+          <>
+            <Progress value={progress} className="h-2" />
+            <div className="flex justify-between mt-2 text-sm">
+              <span className="font-medium">${amountRaised.toLocaleString()}</span>
+              <span className="text-muted-foreground">of ${goalAmount.toLocaleString()}</span>
+            </div>
+          </>
+        )}
       </CardContent>
       <CardFooter className="p-4 pt-0">
         <Link to={`/fundraisers/${id}`} className="w-full">
           <Button className="w-full">
-            {fundraiserType === "ItemDonation" ? "Donate Items" : "Support This Cause"}
+            {fundraiserType === "ItemDonation" ? "Donate Items" : "View Available Items"}
           </Button>
         </Link>
       </CardFooter>

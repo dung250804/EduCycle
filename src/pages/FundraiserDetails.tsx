@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
@@ -34,8 +33,6 @@ import { Badge } from "@/components/ui/badge";
 const FundraiserDetails = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
-  const [donationType, setDonationType] = useState<"items" | "money">("items");
-  const [donationAmount, setDonationAmount] = useState(10);
   const [donationDescription, setDonationDescription] = useState("");
   const [donationCompleted, setDonationCompleted] = useState(false);
   const [donationCode, setDonationCode] = useState("");
@@ -64,8 +61,9 @@ const FundraiserDetails = () => {
   const percentage = Math.min(100, Math.round((fundraiser.amountRaised / fundraiser.goalAmount) * 100));
   
   const handleSubmitDonation = () => {
-    // In a real app, this would submit to a backend
-    // Generate a random donation code
+    // Only for item donations
+    if (fundraiser.fundraiserType !== "ItemDonation") return;
+    
     const randomCode = Math.random().toString(36).substring(2, 10).toUpperCase();
     setDonationCode(randomCode);
     setDonationCompleted(true);
@@ -209,16 +207,21 @@ const FundraiserDetails = () => {
           {/* Right side - Progress and donation */}
           <div className="lg:w-96">
             <div className="border rounded-lg p-6 sticky top-6">
-              <h2 className="text-xl font-semibold mb-4">Progress</h2>
-              
-              <div className="mb-6">
-                <div className="flex justify-between mb-2">
-                  <span className="font-medium">${fundraiser.amountRaised}</span>
-                  <span className="text-muted-foreground">Goal: ${fundraiser.goalAmount}</span>
-                </div>
-                <Progress value={percentage} className="h-3" />
-                <p className="text-sm text-muted-foreground mt-2">{percentage}% of our goal</p>
-              </div>
+              {fundraiser.fundraiserType === "ItemSale" ? (
+                <>
+                  <h2 className="text-xl font-semibold mb-4">Fundraising Progress</h2>
+                  <div className="mb-6">
+                    <div className="flex justify-between mb-2">
+                      <span className="font-medium">${fundraiser.amountRaised}</span>
+                      <span className="text-muted-foreground">Goal: ${fundraiser.goalAmount}</span>
+                    </div>
+                    <Progress value={percentage} className="h-3" />
+                    <p className="text-sm text-muted-foreground mt-2">{percentage}% of our goal</p>
+                  </div>
+                </>
+              ) : (
+                <h2 className="text-xl font-semibold mb-4">Donate Items</h2>
+              )}
               
               <div className="mb-6">
                 <div className="flex items-center justify-between">
@@ -236,80 +239,26 @@ const FundraiserDetails = () => {
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="w-full mb-4">
-                    {fundraiser.fundraiserType === "ItemDonation" ? "Donate Items" : "Make a Donation"}
+                    {fundraiser.fundraiserType === "ItemDonation" ? "Donate Items" : "View Available Items"}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
                   {!donationCompleted ? (
                     <>
                       <DialogHeader>
-                        <DialogTitle>Support this Fundraiser</DialogTitle>
+                        <DialogTitle>
+                          {fundraiser.fundraiserType === "ItemDonation" ? "Donate Items" : "Available Items"}
+                        </DialogTitle>
                         <DialogDescription>
-                          Choose how you'd like to participate in this fundraiser.
+                          {fundraiser.fundraiserType === "ItemDonation" 
+                            ? "Please provide details about the items you'd like to donate."
+                            : "Select items to purchase and support this fundraiser."
+                          }
                         </DialogDescription>
                       </DialogHeader>
                       
-                      <div className="grid grid-cols-2 gap-4 py-4">
-                        <Button
-                          type="button" 
-                          variant={donationType === "money" ? "default" : "outline"}
-                          onClick={() => setDonationType("money")}
-                          className="flex flex-col h-auto py-6 gap-2"
-                        >
-                          <DollarSign className="h-6 w-6" />
-                          <div className="text-sm">Donate Money</div>
-                        </Button>
-                        {fundraiser.fundraiserType === "ItemDonation" && (
-                          <Button
-                            type="button"
-                            variant={donationType === "items" ? "default" : "outline"}
-                            onClick={() => setDonationType("items")}
-                            className="flex flex-col h-auto py-6 gap-2"
-                          >
-                            <HandHeart className="h-6 w-6" />
-                            <div className="text-sm">Donate Items</div>
-                          </Button>
-                        )}
-                      </div>
-                      
-                      {donationType === "money" ? (
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium">Donation Amount ($)</label>
-                            <div className="grid grid-cols-3 gap-2 mt-1">
-                              {[5, 10, 25].map((amount) => (
-                                <Button
-                                  key={amount}
-                                  type="button"
-                                  variant={donationAmount === amount ? "default" : "outline"}
-                                  onClick={() => setDonationAmount(amount)}
-                                  className="h-10"
-                                >
-                                  ${amount}
-                                </Button>
-                              ))}
-                            </div>
-                            <Input 
-                              type="number" 
-                              value={donationAmount} 
-                              onChange={(e) => setDonationAmount(Number(e.target.value))} 
-                              className="mt-2"
-                              min="1"
-                            />
-                          </div>
-                          
-                          <div>
-                            <label className="text-sm font-medium">Add a message (optional)</label>
-                            <Textarea 
-                              placeholder="Write a message of support"
-                              className="mt-1"
-                              value={donationDescription}
-                              onChange={(e) => setDonationDescription(e.target.value)}
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
+                      {fundraiser.fundraiserType === "ItemDonation" ? (
+                        <div className="space-y-4 py-4">
                           <div>
                             <label className="text-sm font-medium">Type of item(s) to donate</label>
                             <Input 
@@ -327,21 +276,43 @@ const FundraiserDetails = () => {
                               onChange={(e) => setDonationDescription(e.target.value)}
                             />
                           </div>
+                          
+                          <DialogFooter>
+                            <Button onClick={handleSubmitDonation}>
+                              Get Donation Code
+                            </Button>
+                          </DialogFooter>
+                        </div>
+                      ) : (
+                        <div className="space-y-4 py-4">
+                          {fundraiser.items && fundraiser.items.map((item) => (
+                            <div key={item.post_id} className="flex items-center gap-4 p-4 border rounded-lg">
+                              <img 
+                                src={item.image || "/placeholder.svg"} 
+                                alt={item.title} 
+                                className="w-20 h-20 object-cover rounded-md"
+                              />
+                              <div className="flex-1">
+                                <h3 className="font-medium">{item.title}</h3>
+                                <p className="text-sm text-muted-foreground">{item.description}</p>
+                                <div className="flex justify-between items-center mt-2">
+                                  <span className="font-bold">${item.price.toFixed(2)}</span>
+                                  <Button size="sm" onClick={() => handlePurchaseItem(item)}>
+                                    Purchase
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       )}
-                      
-                      <DialogFooter>
-                        <Button onClick={handleSubmitDonation}>
-                          {donationType === "money" ? "Complete Donation" : "Get Donation Code"}
-                        </Button>
-                      </DialogFooter>
                     </>
                   ) : (
                     <>
                       <DialogHeader>
-                        <DialogTitle>Thank You for Your Support!</DialogTitle>
+                        <DialogTitle>Thank You!</DialogTitle>
                         <DialogDescription>
-                          Your donation will help our school community.
+                          Your contribution will help our school community.
                         </DialogDescription>
                       </DialogHeader>
                       
@@ -353,24 +324,17 @@ const FundraiserDetails = () => {
                         </div>
                         
                         <h3 className="text-lg font-medium text-center mb-2">
-                          {donationType === "money" ? "Donation Completed!" : "Your Donation Code"}
+                          Your Donation Code
                         </h3>
                         
-                        {donationType === "items" && (
-                          <div className="mb-6 text-center">
-                            <div className="text-2xl font-bold mb-2 tracking-wide text-educycle-blue">{donationCode}</div>
-                            <p className="text-sm text-muted-foreground">
-                              Present this code when delivering your donation to the collection point
-                            </p>
+                        <div className="mb-6 text-center">
+                          <div className="text-2xl font-bold mb-2 tracking-wide text-educycle-blue">
+                            {donationCode}
                           </div>
-                        )}
-                        
-                        <p className="text-center text-sm">
-                          {donationType === "money" 
-                            ? "Your donation of $" + donationAmount + " has been processed. Thank you for your support!"
-                            : "Please bring your donation to the Main Hall during school hours (8am-3pm)."
-                          }
-                        </p>
+                          <p className="text-sm text-muted-foreground">
+                            Present this code when delivering your donation to the collection point
+                          </p>
+                        </div>
                       </div>
                       
                       <DialogFooter>
