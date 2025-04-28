@@ -19,25 +19,38 @@ import Footer from "@/components/Footer";
 import { Search, CheckCircle, XCircle, Image, DollarSign, ArrowLeftRight, HandHeart } from "lucide-react";
 import { mockItems } from "@/data/mockData";
 import AdminSidebar from "@/components/AdminSidebar";
-import { ItemType } from "@/components/ItemCard";
+import { ItemType } from "@/types/user";
 
 // Extended mock items with status for admin review
 interface AdminItemProps {
   id: string;
+  post_id: string;
   title: string;
   description: string;
   price?: number;
   image: string;
   category: string;
   type: ItemType;
+  product_type: string;
   seller: string;
+  seller_id: string;
   status: 'pending' | 'approved' | 'rejected';
   dateSubmitted: string;
 }
 
 // Create extended mock data
 const adminItems: AdminItemProps[] = mockItems.map((item, index) => ({
-  ...item,
+  id: item.id || item.post_id,
+  post_id: item.post_id,
+  title: item.title,
+  description: item.description,
+  price: item.price,
+  image: item.image || "https://placehold.co/300x200",
+  category: item.category || item.product_type,
+  type: item.type as ItemType,
+  product_type: item.product_type,
+  seller: item.seller || "Unknown Seller",
+  seller_id: item.seller_id,
   status: index % 5 === 0 ? 'pending' : (index % 5 === 1 ? 'rejected' : 'approved'),
   dateSubmitted: new Date(Date.now() - Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000).toISOString()
 }));
@@ -46,13 +59,16 @@ const adminItems: AdminItemProps[] = mockItems.map((item, index) => ({
 for (let i = 0; i < 5; i++) {
   adminItems.push({
     id: `ITEM-PEND-${i + 1}`,
+    post_id: `ITEM-PEND-${i + 1}`,
     title: `New Item Pending Approval ${i + 1}`,
     description: "This item is awaiting moderation approval before being listed on the site.",
     price: Math.floor(Math.random() * 100) + 5,
     image: "https://placehold.co/300x200",
     category: ["Books", "Supplies", "Electronics", "Clothing", "Other"][Math.floor(Math.random() * 5)],
-    type: ["sale", "exchange", "donation"][Math.floor(Math.random() * 3)] as ItemType,
+    product_type: ["Books", "Supplies", "Electronics", "Clothing", "Other"][Math.floor(Math.random() * 5)],
+    type: ["Liquidation", "Exchange", "Donation"][Math.floor(Math.random() * 3)] as ItemType,
     seller: "New User",
+    seller_id: `new-user-${i}`,
     status: 'pending',
     dateSubmitted: new Date(Date.now() - Math.floor(Math.random() * 3) * 24 * 60 * 60 * 1000).toISOString()
   });

@@ -7,9 +7,11 @@ import FundraiserCard from "@/components/FundraiserCard";
 import { mockItems, mockFundraisers, categories } from "@/data/mockData";
 import { Link } from "react-router-dom";
 import { Folder, ArrowLeftRight, HandHeart, DollarSign } from "lucide-react";
+
 const Index = () => {
   const featuredItems = mockItems.slice(0, 3);
   const featuredFundraisers = mockFundraisers.slice(0, 2);
+  
   return <div className="flex flex-col min-h-screen">
       <Navigation />
       
@@ -85,7 +87,7 @@ const Index = () => {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredItems.map(item => <ItemCard key={item.id} {...item} />)}
+            {featuredItems.map(item => <ItemCard key={item.post_id} {...item} />)}
           </div>
         </div>
       </section>

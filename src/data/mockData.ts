@@ -1,4 +1,5 @@
-import { ItemCardProps, ItemType } from "@/components/ItemCard";
+
+import type { Post, ItemType } from "@/types/user";
 import { FundraiserCardProps } from "@/components/FundraiserCard";
 
 export const categories = [
@@ -12,63 +13,90 @@ export const categories = [
   "Lab Equipment"
 ];
 
-export const mockItems: ItemCardProps[] = [
+export const mockItems: Post[] = [
   {
+    post_id: "1",
     id: "1",
     title: "Calculus Textbook - 10th Edition",
     description: "Like new condition, used for only one semester. No highlights or markings inside.",
     price: 45.99,
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
     category: "Textbooks",
-    type: "sale",
-    seller: "Ms. Johnson"
+    type: "Liquidation",
+    product_type: "Textbooks",
+    seller: "Ms. Johnson",
+    seller_id: "seller1",
+    status: "Approved"
   },
   {
+    post_id: "2",
     id: "2",
     title: "Scientific Calculator TI-84",
     description: "Perfect working condition, comes with batteries and cover case.",
     price: 65.00,
     image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
     category: "Electronics",
-    type: "sale",
-    seller: "Alex Smith"
+    type: "Liquidation",
+    product_type: "Electronics",
+    seller: "Alex Smith",
+    seller_id: "seller2",
+    status: "Approved"
   },
   {
+    post_id: "3",
     id: "3",
     title: "Basketball - Official Size",
     description: "Slightly used basketball, still has good grip and bounce.",
     image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
     category: "Sports Equipment",
-    type: "exchange",
-    seller: "Coach Wilson"
+    type: "Exchange",
+    product_type: "Sports Equipment",
+    seller: "Coach Wilson",
+    seller_id: "seller3",
+    price: 0,
+    status: "Approved"
   },
   {
+    post_id: "4",
     id: "4",
     title: "Art Supply Bundle",
     description: "Set of acrylic paints, brushes, and sketchbook. Perfect for beginners.",
     image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
     category: "Art Supplies",
-    type: "donation",
-    seller: "Emma Green"
+    type: "Donation",
+    product_type: "Art Supplies",
+    seller: "Emma Green",
+    seller_id: "seller4",
+    price: 0,
+    status: "Approved"
   },
   {
+    post_id: "5",
     id: "5",
     title: "Chemistry Lab Coat - Size M",
     description: "White lab coat in excellent condition. Required for AP Chemistry.",
     price: 15.00,
     image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
     category: "Lab Equipment",
-    type: "sale",
-    seller: "Dr. Franklin"
+    type: "Liquidation",
+    product_type: "Lab Equipment",
+    seller: "Dr. Franklin",
+    seller_id: "seller5",
+    status: "Approved"
   },
   {
+    post_id: "6",
     id: "6",
     title: "Recorder Instrument",
     description: "Barely used recorder from music class. Sanitized and ready for a new home.",
     image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
     category: "Musical Instruments",
-    type: "donation",
-    seller: "Music Department"
+    type: "Donation",
+    product_type: "Musical Instruments",
+    seller: "Music Department",
+    seller_id: "seller6",
+    price: 0,
+    status: "Approved"
   }
 ];
 

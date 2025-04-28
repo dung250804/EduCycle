@@ -11,14 +11,21 @@ export interface User {
   avatar?: string;
 }
 
+export type ItemType = 'Liquidation' | 'Exchange' | 'Donation';
+
 export interface Post {
   post_id: string;
   seller_id: string;
   title: string;
   description: string;
   price: number;
-  type: 'Liquidation' | 'Exchange';
+  type: ItemType;
   product_type: string;
   status: 'Pending' | 'Approved' | 'Cancelled' | 'Completed';
   image?: string;
+  
+  // Additional properties needed by existing code
+  id?: string;
+  category?: string;
+  seller?: string;
 }

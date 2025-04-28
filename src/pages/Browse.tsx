@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import ItemCard, { ItemType } from "@/components/ItemCard";
+import ItemCard from "@/components/ItemCard";
+import { ItemType } from "@/types/user";
 import CategoryFilter from "@/components/CategoryFilter";
 import { mockItems, categories } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
@@ -67,25 +68,25 @@ const Browse = () => {
                     All Types
                   </Button>
                   <Button
-                    variant={selectedType === "sale" ? "default" : "outline"}
+                    variant={selectedType === "Liquidation" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setSelectedType("sale")}
+                    onClick={() => setSelectedType("Liquidation")}
                     className="justify-start"
                   >
                     <DollarSign className="h-4 w-4 mr-2" /> For Sale
                   </Button>
                   <Button
-                    variant={selectedType === "exchange" ? "default" : "outline"}
+                    variant={selectedType === "Exchange" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setSelectedType("exchange")}
+                    onClick={() => setSelectedType("Exchange")}
                     className="justify-start"
                   >
                     <ArrowLeftRight className="h-4 w-4 mr-2" /> For Exchange
                   </Button>
                   <Button
-                    variant={selectedType === "donation" ? "default" : "outline"}
+                    variant={selectedType === "Donation" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setSelectedType("donation")}
+                    onClick={() => setSelectedType("Donation")}
                     className="justify-start"
                   >
                     <HandHeart className="h-4 w-4 mr-2" /> Free Donation
@@ -99,7 +100,7 @@ const Browse = () => {
             {filteredItems.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredItems.map((item) => (
-                  <ItemCard key={item.id} {...item} />
+                  <ItemCard key={item.post_id || item.id} {...item} />
                 ))}
               </div>
             ) : (

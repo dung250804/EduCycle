@@ -2,19 +2,21 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeftRight, DollarSign } from "lucide-react";
+import { ArrowLeftRight, DollarSign, HandHeart } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { Post } from "@/types/user";
+import type { Post, ItemType } from "@/types/user";
 
 export interface ItemCardProps extends Post {}
 
-const ItemCard = ({ post_id, title, description, price, type, product_type, status, image }: ItemCardProps) => {
+const ItemCard = ({ post_id, title, description, price, type, product_type, status, image, id = post_id }: ItemCardProps) => {
   const getTypeIcon = () => {
     switch (type) {
       case "Liquidation":
         return <DollarSign className="h-4 w-4" />;
       case "Exchange":
         return <ArrowLeftRight className="h-4 w-4" />;
+      case "Donation":
+        return <HandHeart className="h-4 w-4" />;
       default:
         return null;
     }
@@ -26,6 +28,8 @@ const ItemCard = ({ post_id, title, description, price, type, product_type, stat
         return "bg-educycle-blue text-white";
       case "Exchange":
         return "bg-educycle-yellow text-black";
+      case "Donation":
+        return "bg-educycle-green text-white";
       default:
         return "bg-gray-500 text-white";
     }
@@ -37,6 +41,8 @@ const ItemCard = ({ post_id, title, description, price, type, product_type, stat
         return "For Sale";
       case "Exchange":
         return "For Exchange";
+      case "Donation":
+        return "Free Donation";
       default:
         return type;
     }
@@ -44,7 +50,7 @@ const ItemCard = ({ post_id, title, description, price, type, product_type, stat
 
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-md">
-      <Link to={`/post/${post_id}`}>
+      <Link to={`/post/${post_id || id}`}>
         <div className="relative h-48 overflow-hidden">
           <img 
             src={image || "/placeholder.svg"} 
@@ -78,7 +84,7 @@ const ItemCard = ({ post_id, title, description, price, type, product_type, stat
         <p className="line-clamp-2 text-sm text-muted-foreground">{description}</p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between">
-        <Link to={`/post/${post_id}`}>
+        <Link to={`/post/${post_id || id}`}>
           <Button variant="outline" size="sm">View Details</Button>
         </Link>
         {type === "Liquidation" && status === "Approved" && (
@@ -90,3 +96,4 @@ const ItemCard = ({ post_id, title, description, price, type, product_type, stat
 };
 
 export default ItemCard;
+export type { ItemType };
