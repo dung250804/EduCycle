@@ -110,11 +110,11 @@ const AdminItems = () => {
   // Get type icon
   const getTypeIcon = (type: ItemType) => {
     switch (type) {
-      case "sale":
+      case "Liquidation":
         return <DollarSign className="h-4 w-4" />;
-      case "exchange":
+      case "Exchange":
         return <ArrowLeftRight className="h-4 w-4" />;
-      case "donation":
+      case "Donation":
         return <HandHeart className="h-4 w-4" />;
     }
   };
@@ -122,11 +122,11 @@ const AdminItems = () => {
   // Get type text
   const getTypeText = (type: ItemType) => {
     switch (type) {
-      case "sale":
+      case "Liquidation":
         return "For Sale";
-      case "exchange":
+      case "Exchange":
         return "For Exchange";
-      case "donation":
+      case "Donation":
         return "Free Donation";
     }
   };
@@ -210,9 +210,9 @@ const AdminItems = () => {
                   onChange={(e) => setFilterType(e.target.value || null)}
                 >
                   <option value="">All Types</option>
-                  <option value="sale">For Sale</option>
-                  <option value="exchange">For Exchange</option>
-                  <option value="donation">Donation</option>
+                  <option value="Liquidation">For Sale</option>
+                  <option value="Exchange">For Exchange</option>
+                  <option value="Donation">Donation</option>
                 </select>
               </div>
               
@@ -270,7 +270,7 @@ const AdminItems = () => {
                             </div>
                             <div>
                               <div className="font-medium truncate max-w-[200px]">{item.title}</div>
-                              {item.type === "sale" && item.price && (
+                              {item.type === "Liquidation" && item.price && (
                                 <div className="text-xs text-muted-foreground">${item.price.toFixed(2)}</div>
                               )}
                             </div>
@@ -405,7 +405,7 @@ const AdminItems = () => {
                 
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Price</p>
-                  <p>{selectedItem.type === "sale" && selectedItem.price ? `$${selectedItem.price.toFixed(2)}` : "N/A"}</p>
+                  <p>{selectedItem.type === "Liquidation" && selectedItem.price ? `$${selectedItem.price.toFixed(2)}` : "N/A"}</p>
                 </div>
                 
                 <div>
