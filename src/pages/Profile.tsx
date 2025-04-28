@@ -3,7 +3,7 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Award, AlertTriangle, Star, UserCheck } from "lucide-react";
+import { Award, AlertTriangle, Star, UserCheck, ShoppingBag, Heart, Coins } from "lucide-react";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
