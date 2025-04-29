@@ -3,11 +3,15 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Award, AlertTriangle, Star, UserCheck, ShoppingBag, Heart, Coins } from "lucide-react";
+import { Award, AlertTriangle, Star, UserCheck, ShoppingBag, Heart, Coins, ArrowLeftRight } from "lucide-react";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import type { User } from "@/types/user";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Button } from "@/components/ui/button";
+import type { User, Transaction } from "@/types/user";
+import { Link } from "react-router-dom";
 
 // Mock user data (replace with actual data when connected to backend)
 const mockUser: User = {
@@ -22,35 +26,93 @@ const mockUser: User = {
   avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
 };
 
+// Mock transaction data
+const mockTransactions: Transaction[] = [
+  {
+    id: 1,
+    type: "Sale",
+    item: "Physics Textbook",
+    date: "2024-04-20",
+    amount: "$45.00",
+    status: "Completed",
+    counterpartyName: "Jane Doe",
+    itemId: "123"
+  },
+  {
+    id: 2,
+    type: "Donation",
+    item: "School Supplies Bundle",
+    date: "2024-04-15",
+    amount: "-",
+    status: "Completed",
+    counterpartyName: "Education Foundation",
+    itemId: "124"
+  },
+  {
+    id: 3,
+    type: "Fundraiser",
+    item: "Science Lab Equipment",
+    date: "2024-04-10",
+    amount: "$25.00",
+    status: "In Progress",
+    counterpartyName: "City High School",
+    itemId: "f125"
+  },
+  {
+    id: 4,
+    type: "Exchange",
+    item: "History Textbook",
+    date: "2024-04-05",
+    amount: "Chemistry Textbook",
+    status: "Completed",
+    counterpartyName: "Mike Johnson",
+    itemId: "126"
+  },
+  {
+    id: 5,
+    type: "Sale",
+    item: "Graphing Calculator",
+    date: "2024-04-01",
+    amount: "$35.00",
+    status: "Pending",
+    counterpartyName: "Sarah Williams",
+    itemId: "127"
+  }
+];
+
 const Profile = () => {
   const [user] = useState<User>(mockUser);
+  const [transactions] = useState<Transaction[]>(mockTransactions);
+  const [currentTab, setCurrentTab] = useState<string>("all");
 
-  const transactions = [
-    {
-      id: 1,
-      type: "Sale",
-      item: "Physics Textbook",
-      date: "2024-04-20",
-      amount: "$45.00",
-      status: "Completed"
-    },
-    {
-      id: 2,
-      type: "Donation",
-      item: "School Supplies Bundle",
-      date: "2024-04-15",
-      amount: "-",
-      status: "Completed"
-    },
-    {
-      id: 3,
-      type: "Fundraiser",
-      item: "Science Lab Equipment",
-      date: "2024-04-10",
-      amount: "$25.00",
-      status: "In Progress"
+  const filteredTransactions = currentTab === "all" 
+    ? transactions 
+    : transactions.filter(transaction => transaction.type.toLowerCase() === currentTab.toLowerCase());
+
+  const getTransactionIcon = (type: TransactionType) => {
+    switch (type) {
+      case "Sale":
+        return <ShoppingBag className="h-4 w-4 text-blue-500" />;
+      case "Donation":
+        return <Heart className="h-4 w-4 text-red-500" />;
+      case "Fundraiser":
+        return <Coins className="h-4 w-4 text-yellow-500" />;
+      case "Exchange":
+        return <ArrowLeftRight className="h-4 w-4 text-green-500" />;
+      default:
+        return <ShoppingBag className="h-4 w-4 text-blue-500" />;
     }
-  ];
+  };
+
+  const renderAmountCell = (transaction: Transaction) => {
+    if (transaction.type === "Exchange") {
+      return <span className="text-sm">{transaction.amount}</span>;
+    } else if (transaction.type === "Donation") {
+      return <span className="text-sm text-muted-foreground">-</span>;
+    } else {
+      return <span className="text-sm font-medium">{transaction.amount}</span>;
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -118,49 +180,101 @@ const Profile = () => {
             </Card>
           </div>
 
-          {/* Activity List */}
+          {/* Activity List with Tabs */}
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activities</CardTitle>
+              <CardTitle>Transaction History</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Item</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {transactions.map((transaction) => (
-                    <TableRow key={transaction.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {transaction.type === "Donation" ? (
-                            <Heart className="h-4 w-4 text-red-500" />
-                          ) : transaction.type === "Fundraiser" ? (
-                            <Coins className="h-4 w-4 text-yellow-500" />
-                          ) : (
-                            <ShoppingBag className="h-4 w-4 text-blue-500" />
-                          )}
-                          {transaction.type}
-                        </div>
-                      </TableCell>
-                      <TableCell>{transaction.item}</TableCell>
-                      <TableCell>{transaction.date}</TableCell>
-                      <TableCell>{transaction.amount}</TableCell>
-                      <TableCell>
-                        <Badge variant={transaction.status === "Completed" ? "default" : "secondary"}>
-                          {transaction.status}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+                <TabsList className="mb-4">
+                  <TabsTrigger value="all">All</TabsTrigger>
+                  <TabsTrigger value="sale">Sales</TabsTrigger>
+                  <TabsTrigger value="exchange">Exchanges</TabsTrigger>
+                  <TabsTrigger value="donation">Donations</TabsTrigger>
+                  <TabsTrigger value="fundraiser">Fundraisers</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value={currentTab} className="mt-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Item</TableHead>
+                        <TableHead>With</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Amount/Received</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Action</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredTransactions.length > 0 ? (
+                        filteredTransactions.map((transaction) => (
+                          <TableRow key={transaction.id}>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                {getTransactionIcon(transaction.type)}
+                                {transaction.type}
+                              </div>
+                            </TableCell>
+                            <TableCell>{transaction.item}</TableCell>
+                            <TableCell>{transaction.counterpartyName}</TableCell>
+                            <TableCell>{transaction.date}</TableCell>
+                            <TableCell>{renderAmountCell(transaction)}</TableCell>
+                            <TableCell>
+                              <Badge 
+                                variant={
+                                  transaction.status === "Completed" ? "default" : 
+                                  transaction.status === "Pending" ? "outline" :
+                                  transaction.status === "In Progress" ? "secondary" : 
+                                  "destructive"
+                                }
+                              >
+                                {transaction.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {transaction.type === "Fundraiser" ? (
+                                <Link to={`/fundraisers/${transaction.itemId?.replace('f', '')}`}>
+                                  <Button variant="outline" size="sm">View</Button>
+                                </Link>
+                              ) : (
+                                <Button variant="outline" size="sm">Details</Button>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
+                            No {currentTab !== "all" ? currentTab.toLowerCase() : ""} transactions found
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                  
+                  {filteredTransactions.length > 5 && (
+                    <Pagination className="mt-4">
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious href="#" />
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink href="#" isActive>1</PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink href="#">2</PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationNext href="#" />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  )}
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         </div>

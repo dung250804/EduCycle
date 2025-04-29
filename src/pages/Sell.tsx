@@ -24,6 +24,7 @@ const Sell = () => {
   const { toast } = useToast();
   const [itemType, setItemType] = useState<"sale" | "exchange" | "donation">("sale");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [exchangePreferences, setExchangePreferences] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,6 +137,24 @@ const Sell = () => {
                         placeholder="0.00"
                         required 
                       />
+                    </div>
+                  )}
+
+                  {/* Exchange Preferences - Only shown for Exchange type */}
+                  {itemType === "exchange" && (
+                    <div>
+                      <Label htmlFor="exchange-preferences">Exchange Preferences</Label>
+                      <Textarea
+                        id="exchange-preferences"
+                        placeholder="What are you looking to exchange this item for? List specific items or categories you're interested in."
+                        rows={3}
+                        value={exchangePreferences}
+                        onChange={(e) => setExchangePreferences(e.target.value)}
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Be specific about what you're willing to trade for. This helps potential exchangers know if their items match your interests.
+                      </p>
                     </div>
                   )}
                   

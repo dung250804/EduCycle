@@ -45,3 +45,16 @@ export interface Fundraiser {
   fundraiserType: FundraiserType;
   items?: Post[];
 }
+
+export type TransactionType = 'Sale' | 'Exchange' | 'Donation' | 'Fundraiser';
+
+export interface Transaction {
+  id: number;
+  type: TransactionType;
+  item: string;
+  date: string;
+  amount: string;
+  status: 'Pending' | 'Completed' | 'In Progress' | 'Cancelled';
+  counterpartyName?: string;
+  itemId?: string;
+}
