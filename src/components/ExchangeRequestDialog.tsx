@@ -6,9 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Upload } from "lucide-react";
+import { Upload, ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { categories } from "@/data/mockData";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface ExchangeRequestDialogProps {
   isOpen: boolean;
@@ -18,6 +22,16 @@ interface ExchangeRequestDialogProps {
   itemName: string;
 }
 
+// Define schema for form validation
+const exchangeFormSchema = z.object({
+  name: z.string().min(1, "Item name is required"),
+  category: z.string().min(1, "Please select a category"),
+  description: z.string().optional(),
+  image: z.instanceof(File, { message: "Please upload an image" })
+});
+
+type ExchangeFormValues = z.infer<typeof exchangeFormSchema>;
+
 const ExchangeRequestDialog = ({
   isOpen,
   onClose,
@@ -26,34 +40,24 @@ const ExchangeRequestDialog = ({
   itemName
 }: ExchangeRequestDialogProps) => {
   const { toast } = useToast();
-  const [itemDetails, setItemDetails] = useState({
-    name: "",
-    description: "",
-    category: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setItemDetails((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSelectChange = (value: string) => {
-    setItemDetails((prev) => ({
-      ...prev,
-      category: value,
-    }));
-  };
+  
+  // Initialize form with react-hook-form and zod validation
+  const form = useForm<ExchangeFormValues>({
+    resolver: zodResolver(exchangeFormSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      category: "",
+    }
+  });
+  
+  const isSubmitting = form.formState.isSubmitting;
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setImageFile(file);
+      form.setValue("image", file);
       
       // Create preview
       const reader = new FileReader();
@@ -64,56 +68,23 @@ const ExchangeRequestDialog = ({
     }
   };
 
-  const handleSubmit = () => {
-    // Validate form
-    if (!itemDetails.name.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter an item name",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!itemDetails.category) {
-      toast({
-        title: "Error",
-        description: "Please select a category",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!imageFile) {
-      toast({
-        title: "Error",
-        description: "Please upload an image of your item",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
+  const onSubmit = (values: ExchangeFormValues) => {
     // Simulate API call to submit exchange request
+    console.log("Submitting exchange request:", values);
+    
+    // In a real app, you would send this data to your backend
     setTimeout(() => {
       toast({
         title: "Exchange request sent!",
         description: `Your exchange request for "${itemName}" has been sent to the trader.`,
       });
-      setIsSubmitting(false);
       resetForm();
       onClose();
     }, 1500);
   };
 
   const resetForm = () => {
-    setItemDetails({
-      name: "",
-      description: "",
-      category: "",
-    });
-    setImageFile(null);
+    form.reset();
     setImagePreview(null);
   };
 
@@ -126,96 +97,148 @@ const ExchangeRequestDialog = ({
             Provide details about the item you want to exchange for "{itemName}".
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-2">
-          <div className="space-y-2">
-            <Label htmlFor="item-name">Item Name</Label>
-            <Input
-              id="item-name"
+        
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
               name="name"
-              value={itemDetails.name}
-              onChange={handleInputChange}
-              placeholder="What item are you offering?"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
-            <Select value={itemDetails.category} onValueChange={handleSelectChange} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Item Details</Label>
-            <Textarea
-              id="description"
-              name="description"
-              value={itemDetails.description}
-              onChange={handleInputChange}
-              placeholder="Describe your item's condition, age, features, etc."
-              rows={3}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Item Image</Label>
-            <div className="border-2 border-dashed rounded-md p-4">
-              {imagePreview ? (
-                <div className="relative">
-                  <img 
-                    src={imagePreview} 
-                    alt="Item preview" 
-                    className="mx-auto max-h-40 object-contain rounded" 
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-2 w-full"
-                    onClick={() => {
-                      setImageFile(null);
-                      setImagePreview(null);
-                    }}
-                  >
-                    Change Image
-                  </Button>
-                </div>
-              ) : (
-                <label className="flex flex-col items-center justify-center cursor-pointer">
-                  <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                  <span className="text-sm font-medium">Upload an image of your item</span>
-                  <span className="text-xs text-muted-foreground mt-1">Accepted formats: JPG, PNG</span>
-                  <Input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleImageChange}
-                  />
-                </label>
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Item Name</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="What item are you offering?" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Sending..." : "Send Exchange Request"}
-          </Button>
-        </DialogFooter>
+            />
+
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectGroup>
+                        {categories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Item Details</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder="Describe your item's condition, age, features, etc."
+                      rows={3}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Detailed information will increase your chances of a successful exchange
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="image"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Item Image</FormLabel>
+                  <FormControl>
+                    <div className="border-2 border-dashed rounded-md p-4">
+                      {imagePreview ? (
+                        <div className="relative">
+                          <img 
+                            src={imagePreview} 
+                            alt="Item preview" 
+                            className="mx-auto max-h-40 object-contain rounded" 
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mt-2 w-full"
+                            onClick={() => {
+                              form.resetField("image");
+                              setImagePreview(null);
+                            }}
+                            type="button"
+                          >
+                            Change Image
+                          </Button>
+                        </div>
+                      ) : (
+                        <label className="flex flex-col items-center justify-center cursor-pointer">
+                          <div className="flex flex-col items-center justify-center gap-2">
+                            <div className="p-2 bg-muted rounded-full">
+                              <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                            </div>
+                            <span className="text-sm font-medium">Upload an image of your item</span>
+                            <span className="text-xs text-muted-foreground">Accepted formats: JPG, PNG</span>
+                          </div>
+                          <Input
+                            id="image-upload"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleImageChange}
+                          />
+                        </label>
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  resetForm();
+                  onClose();
+                }} 
+                disabled={isSubmitting}
+                type="button"
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Sending..." : "Send Exchange Request"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
