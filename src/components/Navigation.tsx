@@ -12,7 +12,7 @@ const Navigation = () => {
     <nav className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="container flex items-center justify-between py-4">
         <div className="flex items-center gap-2">
-          <Link to="/" className="flex items-center">
+          <Link to="/home" className="flex items-center">
             <span className="text-2xl font-bold text-educycle-green">
               Edu<span className="text-educycle-blue">Cycle</span>
             </span>
@@ -57,6 +57,6 @@ const Navigation = () => {
       </div>
     </nav>
   );
-};
+}
 
 export default Navigation;
