@@ -17,6 +17,7 @@ import AdminItems from "./pages/AdminItems";
 import CreateActivity from "./pages/CreateActivity";
 import FundraiserDetails from "./pages/FundraiserDetails";
 import ItemDetails from "./pages/ItemDetails";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/sell" element={<Sell />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/post/:id" element={<ItemDetails />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/donations" element={<AdminDonations />} />
           <Route path="/admin/items" element={<AdminItems />} />

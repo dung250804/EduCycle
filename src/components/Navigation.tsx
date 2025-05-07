@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, User, ShoppingBag } from "lucide-react";
+import { Search, LogIn, ShoppingBag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
@@ -48,9 +48,9 @@ const Navigation = () => {
               Sell Item
             </Button>
           </Link>
-          <Link to="/profile">
+          <Link to="/login">
             <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
+              <LogIn className="h-5 w-5" />
             </Button>
           </Link>
         </div>
