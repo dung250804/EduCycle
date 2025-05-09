@@ -43,13 +43,23 @@ const Login = () => {
   const onSubmit = async (values: LoginFormValues) => {
     try {
       console.log("Login attempt with:", values);
-      // Mock successful login for now
+      // Mock successful login with user_id
+      const mockUserResponse = {
+        user_id: "123",
+        name: "John Smith",
+        email: values.email,
+        role: "Member",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
+      };
+      
+      // Store user data in localStorage
+      localStorage.setItem('eduCycleUser', JSON.stringify(mockUserResponse));
+      
       toast.success("Login successful!");
-      // Normally this would authenticate with your backend
       
       // After successful login, redirect to homepage
       setTimeout(() => {
-        navigate("/");
+        navigate("/home");
       }, 1500);
     } catch (error) {
       console.error("Login error:", error);

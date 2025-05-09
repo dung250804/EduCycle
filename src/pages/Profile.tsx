@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,78 +12,156 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Button } from "@/components/ui/button";
 import type { User, Transaction, TransactionType } from "@/types/user";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
-// Mock user data (replace with actual data when connected to backend)
-const mockUser: User = {
-  user_id: "1",
-  name: "John Smith",
-  email: "john@example.com",
-  role: "Member",
-  reputation_score: 75,
-  violation_count: 0,
-  rating: 4.5,
-  status: "Active",
-  avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
+// Mock user data database
+const mockUsersDatabase: Record<string, User> = {
+  "123": {
+    user_id: "123",
+    name: "John Smith",
+    email: "john@example.com",
+    role: "Member",
+    reputation_score: 75,
+    violation_count: 0,
+    rating: 4.5,
+    status: "Active",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
+  },
+  "456": {
+    user_id: "456",
+    name: "Jane Doe",
+    email: "jane@example.com",
+    role: "Representative",
+    reputation_score: 90,
+    violation_count: 1,
+    rating: 4.8,
+    status: "Active",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jane"
+  }
 };
 
-// Mock transaction data
-const mockTransactions: Transaction[] = [
-  {
-    id: 1,
-    type: "Sale",
-    item: "Physics Textbook",
-    date: "2024-04-20",
-    amount: "$45.00",
-    status: "Completed",
-    counterpartyName: "Jane Doe",
-    itemId: "123"
-  },
-  {
-    id: 2,
-    type: "Donation",
-    item: "School Supplies Bundle",
-    date: "2024-04-15",
-    amount: "-",
-    status: "Completed",
-    counterpartyName: "Education Foundation",
-    itemId: "124"
-  },
-  {
-    id: 3,
-    type: "Fundraiser",
-    item: "Science Lab Equipment",
-    date: "2024-04-10",
-    amount: "$25.00",
-    status: "In Progress",
-    counterpartyName: "City High School",
-    itemId: "f125"
-  },
-  {
-    id: 4,
-    type: "Exchange",
-    item: "History Textbook",
-    date: "2024-04-05",
-    amount: "Chemistry Textbook",
-    status: "Completed",
-    counterpartyName: "Mike Johnson",
-    itemId: "126"
-  },
-  {
-    id: 5,
-    type: "Sale",
-    item: "Graphing Calculator",
-    date: "2024-04-01",
-    amount: "$35.00",
-    status: "Pending",
-    counterpartyName: "Sarah Williams",
-    itemId: "127"
-  }
-];
+// Mock transaction data for each user
+const mockTransactionsDatabase: Record<string, Transaction[]> = {
+  "123": [
+    {
+      id: 1,
+      type: "Sale",
+      item: "Physics Textbook",
+      date: "2024-04-20",
+      amount: "$45.00",
+      status: "Completed",
+      counterpartyName: "Jane Doe",
+      itemId: "123"
+    },
+    {
+      id: 2,
+      type: "Donation",
+      item: "School Supplies Bundle",
+      date: "2024-04-15",
+      amount: "-",
+      status: "Completed",
+      counterpartyName: "Education Foundation",
+      itemId: "124"
+    },
+    {
+      id: 3,
+      type: "Fundraiser",
+      item: "Science Lab Equipment",
+      date: "2024-04-10",
+      amount: "$25.00",
+      status: "In Progress",
+      counterpartyName: "City High School",
+      itemId: "f125"
+    },
+    {
+      id: 4,
+      type: "Exchange",
+      item: "History Textbook",
+      date: "2024-04-05",
+      amount: "Chemistry Textbook",
+      status: "Completed",
+      counterpartyName: "Mike Johnson",
+      itemId: "126"
+    },
+    {
+      id: 5,
+      type: "Sale",
+      item: "Graphing Calculator",
+      date: "2024-04-01",
+      amount: "$35.00",
+      status: "Pending",
+      counterpartyName: "Sarah Williams",
+      itemId: "127"
+    }
+  ],
+  "456": [
+    {
+      id: 1,
+      type: "Donation",
+      item: "Art Supplies",
+      date: "2024-04-22",
+      amount: "-",
+      status: "Completed",
+      counterpartyName: "Community Center",
+      itemId: "128"
+    },
+    {
+      id: 2,
+      type: "Fundraiser",
+      item: "Library Books",
+      date: "2024-04-18",
+      amount: "$50.00",
+      status: "Completed",
+      counterpartyName: "Public Library",
+      itemId: "f129"
+    }
+  ]
+};
 
 const Profile = () => {
-  const [user] = useState<User>(mockUser);
-  const [transactions] = useState<Transaction[]>(mockTransactions);
+  const [user, setUser] = useState<User | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentTab, setCurrentTab] = useState<string>("all");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = () => {
+      setLoading(true);
+      try {
+        // Get user_id from localStorage
+        const storedUser = localStorage.getItem('eduCycleUser');
+        if (!storedUser) {
+          toast.error("User not found. Please login again.");
+          setLoading(false);
+          return;
+        }
+
+        const { user_id } = JSON.parse(storedUser);
+        
+        // In a real app, this would be a fetch call to an API
+        setTimeout(() => {
+          // Get user data by user_id
+          const userData = mockUsersDatabase[user_id];
+          if (userData) {
+            setUser(userData);
+            
+            // Get transactions for this user
+            const userTransactions = mockTransactionsDatabase[user_id] || [];
+            setTransactions(userTransactions);
+          } else {
+            toast.error("User profile not found");
+          }
+          setLoading(false);
+        }, 500); // Simulate API call delay
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        toast.error("Failed to load profile data");
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const filteredTransactions = currentTab === "all" 
     ? transactions 
@@ -113,6 +192,34 @@ const Profile = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <main className="container py-8 flex-1 flex items-center justify-center">
+          <p>Loading profile data...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <main className="container py-8 flex-1 flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold mb-4">Profile Not Found</h1>
+          <p className="mb-6">Please log in to view your profile.</p>
+          <Link to="/login">
+            <Button>Go to Login</Button>
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -127,6 +234,7 @@ const Profile = () => {
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
               <p className="text-muted-foreground">{user.email}</p>
+              <p className="text-sm text-muted-foreground">User ID: {user.user_id}</p>
               <div className="flex gap-2 mt-2">
                 <Badge variant="secondary">{user.role}</Badge>
                 <Badge variant={user.status === 'Active' ? 'default' : 'destructive'}>

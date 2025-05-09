@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Search, LogIn, ShoppingBag, UserRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -18,18 +18,23 @@ import { toast } from "sonner";
 const Navigation = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const [user, setUser] = useState<{ user_id: string; name: string; avatar: string } | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   
-  // Mock user data - in a real app, this would come from an authentication context
-  const user = {
-    name: "John Smith",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
-  };
-  
-  // Mock auth state - in a real app, this would come from your auth system
-  const isAuthenticated = true;
+  useEffect(() => {
+    const userData = localStorage.getItem('eduCycleUser');
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      setIsAuthenticated(true);
+    }
+  }, []);
   
   const handleSignOut = () => {
-    // In a real app, this would call your auth service's logout method
+    // Remove user data from localStorage
+    localStorage.removeItem('eduCycleUser');
+    setUser(null);
+    setIsAuthenticated(false);
     toast.success("You have been signed out");
     navigate("/login");
   };
@@ -75,7 +80,7 @@ const Navigation = () => {
             </Button>
           </Link>
           
-          {isAuthenticated ? (
+          {isAuthenticated && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full h-10 w-10 p-0">
@@ -89,6 +94,7 @@ const Navigation = () => {
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
                     <p className="font-medium">{user.name}</p>
+                    <p className="text-xs text-muted-foreground">User ID: {user.user_id}</p>
                   </div>
                 </div>
                 <DropdownMenuSeparator />
