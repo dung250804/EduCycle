@@ -49,7 +49,8 @@ export interface Fundraiser {
 export type TransactionType = 'Sale' | 'Exchange' | 'Donation' | 'Fundraiser';
 
 export interface Transaction {
-  id: number;
+  id: number; // Used in existing code
+  transactionId?: string; // Added to match API format
   type: TransactionType;
   item: string;
   date: string;
@@ -57,4 +58,44 @@ export interface Transaction {
   status: 'Pending' | 'Completed' | 'In Progress' | 'Cancelled';
   counterpartyName?: string;
   itemId?: string;
+}
+
+// Added new interfaces to match API structure
+export interface TransactionAPI {
+  transactionId: string;
+  postId: string | null;
+  representativeId: string | null;
+  activityId: string | null;
+  item?: {
+    itemId: string;
+    itemName: string;
+    description: string;
+    imageUrl: string;
+    owner: UserAPI;
+    category: CategoryAPI;
+    createdAt: string;
+  };
+  user?: UserAPI;
+  type: TransactionType;
+  status: 'Pending' | 'Completed' | 'In Progress' | 'Cancelled';
+}
+
+export interface UserAPI {
+  userId: string;
+  name: string;
+  email: string;
+  status: string;
+  avatar?: string;
+  roles?: Array<{roleId: number; roleName: string}>;
+  rolesName?: string[];
+  reputationScore?: number;
+  violationCount?: number;
+  rating?: number;
+}
+
+export interface CategoryAPI {
+  categoryId: string;
+  name: string;
+  description: string;
+  createdAt: string;
 }

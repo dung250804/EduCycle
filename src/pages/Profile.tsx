@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -13,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import type { User, Transaction, TransactionType } from "@/types/user";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { transformToTransaction } from "@/utils/transformations";
 
 // Mock user data database
 const mockUsersDatabase: Record<string, User> = {
@@ -118,6 +118,44 @@ const mockTransactionsDatabase: Record<string, Transaction[]> = {
   ]
 };
 
+// Sample API response transformation example
+const sampleApiTransaction = {
+  "transactionId": "t2",
+  "postId": null,
+  "representativeId": "u4",
+  "activityId": "a2",
+  "item": {
+    "itemId": "i2",
+    "itemName": "Scientific Calculator",
+    "description": "Casio FX-991ES Plus, fully functional",
+    "imageUrl": "https://example.com/img2.jpg",
+    "owner": {
+      "userId": "u3",
+      "name": "Charlie Lee",
+      "email": "charlie@vnu.edu.vn",
+      // ... other user properties
+    },
+    "category": {
+      "categoryId": "c2",
+      "name": "Electronics",
+      "description": "Electronic devices and gadgets for academic use",
+      "createdAt": "2025-05-10T17:19:13"
+    },
+    "createdAt": "2025-05-10T17:19:13"
+  },
+  "user": {
+    "userId": "u3",
+    "name": "Charlie Lee",
+    // ... other user properties
+  },
+  "type": "Donation",
+  "status": "Pending"
+};
+
+// Transform the sample transaction to our interface format
+const transformedTransaction: Transaction = transformToTransaction(sampleApiTransaction);
+console.log("Transformed transaction:", transformedTransaction);
+
 const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -147,6 +185,9 @@ const Profile = () => {
             
             // Get transactions for this user
             const userTransactions = mockTransactionsDatabase[user_id] || [];
+            
+            // In a real application, we would transform API responses like this:
+            // const transformedTransactions = apiTransactions.map(transformToTransaction);
             setTransactions(userTransactions);
           } else {
             toast.error("User profile not found");
